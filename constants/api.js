@@ -1,4 +1,30 @@
-export const fetchMeetups = () => {
-    fetch('http://localhost:3000/api/meetups')
-        .then(res => res.json());
+import axios from 'axios';
+import { Platform } from 'react-native';
+
+let url;
+
+if (Platform.OS !== 'ios') {
+  url = 'http://192.168.0.8:3000/api';
+} else {
+  url = 'http://localhost:3000/api';
 }
+
+axios.defaults.baseURL = url;
+
+const fakeGroupId = '59832a4e904c090ccc3b7593';
+
+class MeetupApi {
+  constructor() {
+    this.groupId = fakeGroupId;
+    this.path = `/groups/${this.groupId}/meetups`;
+  }
+  async fetchGroupMeetups() {
+    const { data } = await axios.get(this.path);
+
+    return data.meetups;
+  }
+}
+
+export {
+  MeetupApi,
+};
